@@ -1,46 +1,37 @@
-import {
-  imageDataToPixelMatrix,
-  isBlackBorderPixel,
-  isBlackPixel,
-  pixelMatrixToData,
-  toLinePixel,
-  toWhitePixel
-} from './utils';
+import { drawBorders } from './image-data-manipulations';
 
-export const blackAndWhite = (data: Uint8ClampedArray) => {
-  const BLACK_LIMIT = 128;
-  for (let i = 0; i < data.length; i += 4) {
-    const av = (data[i] + data[i + 1] + data[i + 2]) / 3;
-    let res = Math.min(av + BLACK_LIMIT, 255);
+const prepareCanvas = (canvas: HTMLCanvasElement): HTMLCanvasElement => {
+  if (canvas) return canvas;
 
-    res = res === 255 ? 255 : 0;
+  canvas = document.createElement('canvas');
 
-    data[i] = res;
-    data[i + 1] = res;
-    data[i + 2] = res;
-  }
+  document.body.append(canvas);
+
+  return canvas;
 }
 
-export const drawBorders = (data: Uint8ClampedArray, w: number, h: number) => {
-  blackAndWhite(data);
+const processFilter = (img: HTMLImageElement, filter: TFilter, options: IProcessFilterOptions): void => {
+  const { width = img.width, height = img.height, removeCanvas = false } = options;
+  const canvas = prepareCanvas(options.canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = width;
+  canvas.height = height;
 
-  const matrix = imageDataToPixelMatrix(data, w, h);
+  ctx.drawImage(img, 0, 0, width, height);
 
-  for (const row of matrix) {
-    for (const pixel of row) {
-      if (isBlackBorderPixel(pixel, matrix)) {
-        toLinePixel(pixel);
-      }
-    }
-  }
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  const filterOptions: IFilterOptions = {
+    height, width
+  };
 
-  for (const row of matrix) {
-    for (const pixel of row) {
-      if (isBlackPixel(pixel)) {
-        toWhitePixel(pixel);
-      }
-    }
-  }
+  filter(data, filterOptions);
 
-  pixelMatrixToData(matrix, data);
+  ctx.putImageData(imageData, 0, 0);
+
+  if (removeCanvas) canvas.remove();
+}
+
+export const borderFilter = (img: HTMLImageElement, options: IProcessFilterOptions): void => {
+  processFilter(img, drawBorders, options);
 }

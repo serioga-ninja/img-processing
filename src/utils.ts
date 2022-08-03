@@ -2,15 +2,6 @@ export const roundLow = (n: number): number => {
   return Math.abs(Math.round(n - 0.5));
 }
 
-interface IPixel {
-  red: number;
-  green: number;
-  blue: number;
-  alpha: number;
-  x: number;
-  y: number;
-}
-
 // [x, y]
 const coords = [
   [-1, -1], [0, -1], [1, -1],
