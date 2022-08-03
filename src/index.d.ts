@@ -24,4 +24,4 @@ interface IFilterOptions {
   height?: number;
 }
 
-type TFilter = (data: Uint8ClampedArray, options?: IFilterOptions) => void;
+type TFilter = (ctx: CanvasRenderingContext2D, options?: IFilterOptions) => ImageData;
