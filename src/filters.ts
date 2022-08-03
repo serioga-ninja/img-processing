@@ -1,4 +1,12 @@
-import { drawBorders } from './image-data-manipulations';
+import { blackAndWhite, drawBorders } from './image-data-manipulations';
+
+export const borderFilter = (img: HTMLImageElement, options: IProcessFilterOptions): void => {
+  processFilter(img, drawBorders, options);
+}
+
+export const blackAndWhiteFilter = (img: HTMLImageElement, options: IProcessFilterOptions): void => {
+  processFilter(img, blackAndWhite, options);
+}
 
 const prepareCanvas = (canvas: HTMLCanvasElement): HTMLCanvasElement => {
   if (canvas) return canvas;
@@ -30,8 +38,4 @@ const processFilter = (img: HTMLImageElement, filter: TFilter, options: IProcess
   ctx.putImageData(imageData, 0, 0);
 
   if (removeCanvas) canvas.remove();
-}
-
-export const borderFilter = (img: HTMLImageElement, options: IProcessFilterOptions): void => {
-  processFilter(img, drawBorders, options);
 }

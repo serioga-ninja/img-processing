@@ -5,7 +5,7 @@ import {
   pixelMatrixToData,
   toLinePixel,
   toWhitePixel
-} from './utils';
+} from './utils/pixel';
 
 export const blackAndWhite = (data: Uint8ClampedArray) => {
   const BLACK_LIMIT = 128;
