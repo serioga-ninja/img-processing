@@ -1,6 +1,6 @@
 import './index.d';
 import lenna from '../assets/Lenna.png';
-import { blackAndWhite } from './filters';
+import { blackAndWhite, drawBorders } from './filters';
 import {
   imageDataToPixelMatrix,
   isBlackBorderPixel, isBlackPixel,
@@ -32,27 +32,7 @@ function draw(img: HTMLImageElement) {
   const imageData = ctx.getImageData(0, 0, w, h);
   const data = imageData.data;
 
-  blackAndWhite(data);
-
-  const matrix = imageDataToPixelMatrix(data, w, h);
-
-  for (const row of matrix) {
-    for (const pixel of row) {
-      if (isBlackBorderPixel(pixel, matrix)) {
-        toLinePixel(pixel);
-      }
-    }
-  }
-
-  for (const row of matrix) {
-    for (const pixel of row) {
-      if (isBlackPixel(pixel)) {
-        toWhitePixel(pixel);
-      }
-    }
-  }
-
-  pixelMatrixToData(matrix, imageData.data);
+  drawBorders(data, w, h);
 
   ctx.putImageData(imageData, 0, 0);
 }
